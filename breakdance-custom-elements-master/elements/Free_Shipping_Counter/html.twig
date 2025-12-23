@@ -1,0 +1,150 @@
+{% set messages = content.messages %}
+{% set currency = content.currency_symbol|default('SEK') %}
+{% set duration = design.animation.duration.number|default(0.8) %}
+{% set easing = design.animation.easing|default('power3.out') %}
+{% set icon_disabled = design.icon.disable|default(false) %}
+
+<div class="fs-counter-wrapper"
+     data-duration="{{ duration }}"
+     data-easing="{{ easing }}"
+     data-msg-progress="{{ messages.in_progress|default('Add {amount} more for free shipping!') }}"
+     data-msg-achieved="{{ messages.achieved|default('You qualify for free shipping!') }}"
+     data-msg-empty="{{ messages.empty_cart|default('Your cart is empty. Add {amount} to qualify for free shipping.') }}"
+     data-currency="{{ currency }}">
+
+  <div class="fs-counter-content">
+    {% if not icon_disabled %}
+    <div class="fs-counter-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor">
+        <path d="M624 368h-16V251.9c0-19-7.7-37.5-21.1-50.9L503 117.1C489.6 103.7 471 96 452.1 96H416V56c0-30.9-25.1-56-56-56H56C25.1 0 0 25.1 0 56v304c0 30.9 25.1 56 56 56h8c0 53 43 96 96 96s96-43 96-96h128c0 53 43 96 96 96s96-43 96-96h48c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16zm-464 96c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zm208-96H242.7c-16.6-28.6-47.2-48-82.7-48s-66.1 19.4-82.7 48H56c-4.4 0-8-3.6-8-8V56c0-4.4 3.6-8 8-8h304c4.4 0 8 3.6 8 8v312zm48 96c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zm160-96h-28.7c-16.6-28.6-47.2-48-82.7-48s-66.1 19.4-82.7 48H416V144h36.1c9.5 0 18.6 3.9 25.1 10.3l83.9 83.9c6.3 6.3 10.3 15.6 10.3 25.1V368z"/>
+      </svg>
+    </div>
+    {% endif %}
+
+    <div class="fs-counter-message-wrapper">
+      <div class="fs-counter-message">
+        <span class="fs-msg-text">Loading...</span>
+      </div>
+
+      <div class="fs-counter-progress">
+        <div class="fs-progress-track">
+          <div class="fs-progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var wrapper = document.currentScript.previousElementSibling;
+  if (!wrapper || !wrapper.classList.contains('fs-counter-wrapper')) return;
+
+  var messageText = wrapper.querySelector('.fs-msg-text');
+  var progressFill = wrapper.querySelector('.fs-progress-fill');
+
+  if (!messageText || !progressFill) return;
+
+  var settings = {
+    duration: parseFloat(wrapper.dataset.duration || '0.8'),
+    easing: wrapper.dataset.easing || 'power3.out',
+    msgProgress: wrapper.dataset.msgProgress || 'Add {amount} more for free shipping!',
+    msgAchieved: wrapper.dataset.msgAchieved || 'You qualify for free shipping!',
+    msgEmpty: wrapper.dataset.msgEmpty || 'Your cart is empty. Add {amount} to qualify for free shipping.',
+    currency: wrapper.dataset.currency || 'SEK'
+  };
+
+  var currentAmount = 0;
+  var currentPercentage = 0;
+
+  function ensureGSAP(callback) {
+    if (typeof gsap !== 'undefined') {
+      callback();
+    } else {
+      setTimeout(function() { ensureGSAP(callback); }, 100);
+    }
+  }
+
+  function formatAmount(amount) {
+    return Math.ceil(amount) + ' ' + settings.currency;
+  }
+
+  function updateCounter(data) {
+    var cartTotal = parseFloat(data.cart_total || 0);
+    var threshold = parseFloat(data.threshold || 0);
+    var remaining = Math.max(0, threshold - cartTotal);
+    var percentage = threshold > 0 ? Math.min(100, (cartTotal / threshold) * 100) : 0;
+
+    var message = '';
+    var targetPercentage = percentage;
+
+    if (cartTotal === 0) {
+      message = settings.msgEmpty.replace('{amount}', '<span class="fs-amount">' + formatAmount(threshold) + '</span>');
+      targetPercentage = 0;
+    } else if (remaining > 0) {
+      message = settings.msgProgress.replace('{amount}', '<span class="fs-amount">' + formatAmount(remaining) + '</span>');
+    } else {
+      message = settings.msgAchieved;
+      targetPercentage = 100;
+    }
+
+    messageText.innerHTML = message;
+
+    ensureGSAP(function() {
+      gsap.to(progressFill, {
+        width: targetPercentage + '%',
+        duration: settings.duration,
+        ease: settings.easing
+      });
+
+      if (remaining !== currentAmount) {
+        var amountElement = messageText.querySelector('.fs-amount');
+        if (amountElement) {
+          gsap.fromTo(amountElement,
+            { scale: 1.2, opacity: 0 },
+            { scale: 1, opacity: 1, duration: settings.duration * 0.5, ease: settings.easing }
+          );
+        }
+      }
+    });
+
+    currentAmount = remaining;
+    currentPercentage = percentage;
+  }
+
+  function fetchShippingData() {
+    if (typeof wc_add_to_cart_params === 'undefined') {
+      setTimeout(fetchShippingData, 200);
+      return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', wc_add_to_cart_params.ajax_url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        try {
+          var response = JSON.parse(xhr.responseText);
+          if (response.success && response.data) {
+            updateCounter(response.data);
+          }
+        } catch (e) {
+          console.error('Free Shipping Counter: Parse error', e);
+        }
+      }
+    };
+
+    xhr.send('action=get_free_shipping_data');
+  }
+
+  fetchShippingData();
+
+  jQuery(document.body).on('added_to_cart removed_from_cart updated_cart_totals wc_fragments_refreshed', function() {
+    fetchShippingData();
+  });
+
+})();
+</script>

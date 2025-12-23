@@ -1,0 +1,169 @@
+<div class="atm-wrapper">
+  {# Toggle Button #}
+  <button 
+    class="atm-toggle {% if content.icon.type == 'plus' %}atm-toggle--plus{% else %}atm-toggle--hamburger{% endif %}" 
+    aria-label="Toggle Menu" 
+    aria-expanded="false"
+    data-duration="{{ design.animation.duration|default('0.5') }}"
+    data-stagger="{{ design.animation.stagger|default('0.1') }}"
+    data-ease="{{ design.animation.ease|default('power3.out') }}"
+  >
+    <span class="atm-icon">
+      <span class="atm-icon-line"></span>
+      <span class="atm-icon-line"></span>
+      <span class="atm-icon-line"></span>
+    </span>
+  </button>
+
+  {# Content Container #}
+  <div class="atm-content">
+    <div class="atm-containers">
+      %%CHILDREN%%
+    </div>
+  </div>
+
+  {# Backdrop #}
+  <div class="atm-backdrop"></div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  
+  var wrapper = document.currentScript.previousElementSibling;
+  if (!wrapper || !wrapper.classList.contains('atm-wrapper')) return;
+  
+  var toggle = wrapper.querySelector('.atm-toggle');
+  var content = wrapper.querySelector('.atm-content');
+  var containers = wrapper.querySelectorAll('.atm-containers > *');
+  var backdrop = wrapper.querySelector('.atm-backdrop');
+  
+  if (!toggle || !content) return;
+
+  var duration = parseFloat(toggle.dataset.duration) || 0.5;
+  var stagger = parseFloat(toggle.dataset.stagger) || 0.2;
+  var ease = toggle.dataset.ease || 'power3.out';
+  
+  var isOpen = false;
+  var timeline = null;
+
+  function ensureGSAP(callback) {
+    if (typeof gsap !== 'undefined') {
+      callback();
+    } else {
+      setTimeout(function() { ensureGSAP(callback); }, 100);
+    }
+  }
+
+  function openMenu() {
+    if (isOpen) return;
+    isOpen = true;
+
+    toggle.classList.add('is-open');
+    toggle.setAttribute('aria-expanded', 'true');
+    content.classList.add('is-open');
+    backdrop.classList.add('is-active');
+
+    ensureGSAP(function() {
+      if (timeline) timeline.kill();
+      timeline = gsap.timeline();
+
+      // Fade in backdrop
+      timeline.to(backdrop, {
+        opacity: 1,
+        duration: duration * 0.6,
+        ease: 'power2.out'
+      }, 0);
+
+      // Fade in content container
+      timeline.to(content, {
+        opacity: 1,
+        duration: duration * 0.3,
+        ease: 'power2.out'
+      }, 0);
+
+      // Animate containers from top down with stagger
+      if (containers.length > 0) {
+        timeline.fromTo(containers,
+          {
+            opacity: 0,
+            y: -32,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: duration,
+            stagger: stagger,
+            ease: ease
+          },
+          duration * 0.1
+        );
+      }
+    });
+  }
+
+  function closeMenu() {
+    if (!isOpen) return;
+    isOpen = false;
+
+    toggle.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+
+    ensureGSAP(function() {
+      if (timeline) timeline.kill();
+      timeline = gsap.timeline({
+        onComplete: function() {
+          content.classList.remove('is-open');
+          backdrop.classList.remove('is-active');
+        }
+      });
+
+      // Fade out containers (reverse)
+      if (containers.length > 0) {
+        timeline.to(containers, {
+          opacity: 0,
+          y: -32,
+          duration: duration * 0.6,
+          stagger: stagger * 0.5,
+          ease: 'power2.in'
+        }, 0);
+      }
+
+      // Fade out content container
+      timeline.to(content, {
+        opacity: 0,
+        duration: duration * 0.4,
+        ease: 'power2.in'
+      }, duration * 0.3);
+
+      // Fade out backdrop
+      timeline.to(backdrop, {
+        opacity: 0,
+        duration: duration * 0.6,
+        ease: 'power2.in'
+      }, duration * 0.2);
+    });
+  }
+
+  toggle.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  if (backdrop) {
+    backdrop.addEventListener('click', closeMenu);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && isOpen) {
+      closeMenu();
+    }
+  });
+})();
+</script>

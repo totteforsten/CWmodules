@@ -1,0 +1,276 @@
+{# Banner Container #}
+%%SELECTOR%% {
+    position: relative;
+    z-index: 100;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    {% if design.banner.background %}
+    background: {{ design.banner.background }};
+    {% endif %}
+    {% if design.banner.height.style %}
+    min-height: {{ design.banner.height.style }};
+    {% endif %}
+}
+
+%%SELECTOR%% .bde-promo-banner__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    {% if design.banner.padding %}
+    {{ macros.padding(design.banner.padding) }}
+    {% endif %}
+}
+
+{# Text Styles #}
+%%SELECTOR%% .bde-promo-banner__text-before,
+%%SELECTOR%% .bde-promo-banner__text-after,
+%%SELECTOR%% .bde-promo-banner__marquee-text,
+%%SELECTOR%% .bde-promo-banner__expired,
+%%SELECTOR%% .bde-promo-banner__link-text {
+    {% if design.text.color %}
+    color: {{ design.text.color }};
+    {% endif %}
+    {% if design.text.typography %}
+    {{ macros.typography(design.text.typography) }}
+    {% endif %}
+}
+
+%%SELECTOR%% .bde-promo-banner__link-text {
+    margin-left: 10px;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+{# Countdown Section #}
+%%SELECTOR%% .bde-promo-banner__countdown-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+%%SELECTOR%% .bde-promo-banner__countdown-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+%%SELECTOR%% .bde-promo-banner__countdown-link:hover {
+    opacity: 0.9;
+}
+
+%%SELECTOR%% .bde-promo-banner__timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    {% if design.countdown.background %}
+    background: {{ design.countdown.background }};
+    {% endif %}
+    {% if design.countdown.color %}
+    color: {{ design.countdown.color }};
+    {% endif %}
+    {% if design.countdown.border_radius.style %}
+    border-radius: {{ design.countdown.border_radius.style }};
+    {% endif %}
+    {% if design.countdown.padding.style %}
+    padding: {{ design.countdown.padding.style }};
+    {% else %}
+    padding: 4px 10px;
+    {% endif %}
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    {% if design.countdown.typography %}
+    {{ macros.typography(design.countdown.typography) }}
+    {% endif %}
+}
+
+%%SELECTOR%% .bde-promo-banner__time-unit {
+    display: inline-flex;
+    align-items: center;
+}
+
+%%SELECTOR%% .bde-promo-banner__separator {
+    margin: 0 1px;
+}
+
+%%SELECTOR%% .bde-promo-banner__expired {
+    font-weight: 600;
+}
+
+{# Marquee Section #}
+%%SELECTOR%% .bde-promo-banner__marquee-section {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    {% if content.banner_mode == 'both' %}
+    margin-left: 30px;
+    padding-left: 30px;
+    border-left: 1px solid rgba(255,255,255,0.2);
+    {% endif %}
+}
+
+{# Fade Edges #}
+{% if design.marquee.fade_edges %}
+{% set fadeWidth = design.marquee.fade_width.style|default('60px') %}
+{% set fadeColor = design.marquee.fade_color|default(design.banner.background|default('#1a1a2e')) %}
+%%SELECTOR%% .bde-promo-banner__marquee-section::before,
+%%SELECTOR%% .bde-promo-banner__marquee-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: {{ fadeWidth }};
+    z-index: 2;
+    pointer-events: none;
+}
+
+%%SELECTOR%% .bde-promo-banner__marquee-section::before {
+    left: 0;
+    background: linear-gradient(to right, {{ fadeColor }}, transparent);
+}
+
+%%SELECTOR%% .bde-promo-banner__marquee-section::after {
+    right: 0;
+    background: linear-gradient(to left, {{ fadeColor }}, transparent);
+}
+{% endif %}
+
+%%SELECTOR%% .bde-promo-banner__marquee-track {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+}
+
+%%SELECTOR%% .bde-promo-banner__marquee-item {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    will-change: transform;
+}
+
+%%SELECTOR%% .bde-promo-banner__marquee-item a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: inherit;
+    text-decoration: none;
+}
+
+%%SELECTOR%% .bde-promo-banner__marquee-item a:hover {
+    opacity: 0.8;
+}
+
+%%SELECTOR%% .bde-promo-banner__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    {% if design.marquee.icon_size.style %}
+    width: {{ design.marquee.icon_size.style }};
+    height: {{ design.marquee.icon_size.style }};
+    {% else %}
+    width: 18px;
+    height: 18px;
+    {% endif %}
+    {% if design.marquee.icon_color %}
+    color: {{ design.marquee.icon_color }};
+    {% endif %}
+}
+
+%%SELECTOR%% .bde-promo-banner__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+%%SELECTOR%% .bde-promo-banner__separator-item {
+    {% if design.marquee.separator_color %}
+    color: {{ design.marquee.separator_color }};
+    {% else %}
+    opacity: 0.5;
+    {% endif %}
+}
+
+{# Close Button #}
+%%SELECTOR%% .bde-promo-banner__close {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: {% if design.close_button.background %}{{ design.close_button.background }}{% else %}transparent{% endif %};
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    {% if design.close_button.border_radius.style %}
+    border-radius: {{ design.close_button.border_radius.style }};
+    {% endif %}
+    {% if design.close_button.color %}
+    color: {{ design.close_button.color }};
+    {% else %}
+    color: #ffffff;
+    {% endif %}
+}
+
+%%SELECTOR%% .bde-promo-banner__close:hover {
+    {% if design.close_button.hover_color %}
+    color: {{ design.close_button.hover_color }};
+    {% endif %}
+    {% if design.close_button.background_hover %}
+    background: {{ design.close_button.background_hover }};
+    {% endif %}
+}
+
+%%SELECTOR%% .bde-promo-banner__close svg {
+    {% if design.close_button.size.style %}
+    width: {{ design.close_button.size.style }};
+    height: {{ design.close_button.size.style }};
+    {% else %}
+    width: 20px;
+    height: 20px;
+    {% endif %}
+}
+
+{# Keyframes #}
+@keyframes bde-marquee-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+{# Responsive adjustments #}
+@media (max-width: 767px) {
+    %%SELECTOR%% .bde-promo-banner__wrapper {
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px 40px 10px 15px;
+    }
+
+    %%SELECTOR%% .bde-promo-banner__marquee-section {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+        width: 100%;
+    }
+
+    %%SELECTOR%% .bde-promo-banner__countdown-section {
+        font-size: 0.9em;
+    }
+}

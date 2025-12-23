@@ -1,0 +1,395 @@
+/* Wrapper */
+.exp-menu-wrapper {
+  position: relative;
+}
+
+/* Trigger Button - Stays visible on top */
+%%SELECTOR%% .exp-menu-trigger {
+  position: relative;
+  {% if design.position.top.number is defined %}
+  top: {{ design.position.top.number }}{{ design.position.top.unit }};
+  {% else %}
+  top: {{ design.position.top|default('30px') }};
+  {% endif %}
+  {% if design.position.left.number is defined %}
+  left: {{ design.position.left.number }}{{ design.position.left.unit }};
+  {% else %}
+  left: {{ design.position.left|default('30px') }};
+  {% endif %}
+  z-index: 10001;
+  display: flex;
+  height:80px;
+  width:80px;
+  align-items: center;
+  {% if design.button.gap.number is defined %}
+  gap: {{ design.button.gap.number }}{{ design.button.gap.unit }};
+  {% else %}
+  gap: {{ design.button.gap|default('12px') }};
+  {% endif %}
+  {% if design.button.padding %}
+  padding: {{ design.button.padding }};
+  {% else %}
+  padding: 14px 24px;
+  {% endif %}
+  background: {{ design.button.background|default('#1a1a1a') }};
+  color: {{ design.button.color|default('#fff') }};
+  border: none;
+  {% if design.button.radius.number is defined %}
+  border-radius: {{ design.button.radius.number }}{{ design.button.radius.unit }};
+  {% else %}
+  border-radius: {{ design.button.radius|default('8px') }};
+  {% endif %}
+  {% if design.button.font_size.number is defined %}
+  font-size: {{ design.button.font_size.number }}{{ design.button.font_size.unit }};
+  {% else %}
+  font-size: {{ design.button.font_size|default('15px') }};
+  {% endif %}
+  font-weight: {{ design.button.font_weight|default('500') }};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  justify-content: end;
+  border: 3px solid #1a1a1a;
+}
+%%SELECTOR%% .exp-menu-trigger.is-waiting {
+  width:720px!important;
+justify-content: end;
+}
+
+
+
+%%SELECTOR%% .exp-menu-trigger:hover {
+  background: {{ design.button.hover_background|default('#2a2a2a') }};
+}
+
+/* Button stays on top when open */
+%%SELECTOR%% .exp-menu-trigger.is-open {
+  z-index: 10002;
+  width:720px!important;
+justify-content: end;
+}
+
+
+button.exp-menu-trigger.is-open .menuclose{
+display: block;
+opacity: 1;
+
+}
+
+button.exp-menu-trigger.is-waiting .menuclose{
+display: block;
+transform: translateY(-24px);
+opacity: 0;
+}
+
+ .menuclose{
+display: none;
+font-size: 20px;
+color: white;
+left: 30px;
+position: absolute;
+transition: 0.3s ease;
+opacity: 0;
+}
+
+
+
+
+
+
+/* Hamburger Icon */
+%%SELECTOR%% .trigger-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 18px;
+  height: 14px;
+  position: relative;
+}
+
+%%SELECTOR%% .icon-line {
+  width: 22px;
+  height: 3px;
+  background: currentColor;
+  transition: all 0.3s ease;
+  position: absolute;
+  left: -8px;
+}
+
+%%SELECTOR%% .icon-line:nth-child(1) {
+  top: 0;
+  transform: translateX(4px);
+}
+
+%%SELECTOR%% .icon-line:nth-child(2) {
+  top: 10px;
+  transform: translateX(-4px);
+}
+
+
+/* Hamburger to X animation */
+%%SELECTOR%% .exp-menu-trigger:hover .icon-line:nth-child(1) {
+  top: 0px;
+  transform: translateX(0px);
+  color: white;
+}
+
+%%SELECTOR%% .exp-menu-trigger:hover .icon-line:nth-child(2) {
+  top: 10px;
+  transform: translateX(0px);
+  color: white;
+}
+
+
+/* Hamburger to X animation */
+%%SELECTOR%% .exp-menu-trigger.is-open .icon-line:nth-child(1) {
+  top: 6px;
+  transform: rotate(45deg);
+  color: white;
+}
+
+%%SELECTOR%% .exp-menu-trigger.is-open .icon-line:nth-child(2) {
+  top: 6px;
+  transform: rotate(-45deg);
+  color: white;
+}
+
+/* Expanding Menu Container */
+%%SELECTOR%% .exp-menu-container {
+  position: absolute;
+  {% if design.position.top.number is defined %}
+  top: {{ design.position.top.number }}{{ design.position.top.unit }};
+  {% else %}
+  top: {{ design.position.top|default('30px') }};
+  {% endif %}
+  {% if design.position.left.number is defined %}
+  right: {{ design.position.left.number }}{{ design.position.left.unit }};  /* Changed: left → right */
+  {% else %}
+  right: {{ design.position.left|default('30px') }};  /* Changed: left → right */
+  {% endif %}
+  left: auto;  /* Add this to override any left positioning */
+  width: 0;
+  height: {{ design.menu.initial_height|default('80px') }};
+  max-width: {{ design.menu.max_width|default('720px') }};
+  max-height: {{ design.menu.max_height|default('60vh') }};
+  background: {{ design.menu.background|default('#1a1a1a') }};
+  {% if design.menu.radius.number is defined %}
+  border-radius: {{ design.menu.radius.number }}{{ design.menu.radius.unit }};
+  {% else %}
+  border-radius: {{ design.menu.radius|default('16px') }};
+  {% endif %}
+  {% if design.menu.shadow %}
+  box-shadow: {{ design.menu.shadow }};
+  {% else %}
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  {% endif %}
+  overflow: hidden;
+  z-index: 10000;
+  
+}
+
+/* Menu Content */
+%%SELECTOR%% .exp-menu-content {
+  width: 100%;
+  height: 100%;
+  {% if design.menu.padding %}
+  padding: {{ design.menu.padding }};
+  {% else %}
+  padding: 80px 40px 40px;
+  {% endif %}
+  overflow-y: auto;
+  opacity: 0;
+}
+
+%%SELECTOR%% .exp-menu-grid {
+  display: grid;
+  grid-template-columns: {{ design.layout.columns|default('1fr') }};
+  {% if design.layout.gap.number is defined %}
+  gap: {{ design.layout.gap.number }}{{ design.layout.gap.unit }};
+  {% else %}
+  gap: {{ design.layout.gap|default('40px') }};
+  {% endif %}
+}
+
+%%SELECTOR%% .exp-menu-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax({{ design.layout.column_min|default('180px') }}, 1fr));
+  {% if design.layout.column_gap.number is defined %}
+  gap: {{ design.layout.column_gap.number }}{{ design.layout.column_gap.unit }};
+  {% else %}
+  gap: {{ design.layout.column_gap|default('32px') }};
+  {% endif %}
+}
+
+/* Column */
+%%SELECTOR%% .exp-column {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+%%SELECTOR%% .exp-column-title {
+  {% if design.column.title_size.number is defined %}
+  font-size: {{ design.column.title_size.number }}{{ design.column.title_size.unit }};
+  {% else %}
+  font-size: {{ design.column.title_size|default('11px') }};
+  {% endif %}
+  font-weight: {{ design.column.title_weight|default('600') }};
+  color: {{ design.column.title_color|default('#888') }};
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  {% if design.column.title_margin.number is defined %}
+  margin-bottom: {{ design.column.title_margin.number }}{{ design.column.title_margin.unit }};
+  {% else %}
+  margin-bottom: {{ design.column.title_margin|default('16px') }};
+  {% endif %}
+}
+
+%%SELECTOR%% .exp-column-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  {% if design.items.gap.number is defined %}
+  gap: {{ design.items.gap.number }}{{ design.items.gap.unit }};
+  {% else %}
+  gap: {{ design.items.gap|default('4px') }};
+  {% endif %}
+}
+
+%%SELECTOR%% .exp-item-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  {% if design.items.padding %}
+  padding: {{ design.items.padding }};
+  {% else %}
+  padding: 6px 0;
+  {% endif %}
+  color: {{ design.items.color|default('#fff') }};
+  {% if design.items.font_size.number is defined %}
+  font-size: {{ design.items.font_size.number }}{{ design.items.font_size.unit }};
+  {% else %}
+  font-size: {{ design.items.font_size|default('15px') }};
+  {% endif %}
+  font-weight: {{ design.items.font_weight|default('400') }};
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+%%SELECTOR%% .exp-item-link:hover {
+  color: {{ design.items.hover_color|default('#ccc') }};
+  transform: translateX(4px);
+}
+
+%%SELECTOR%% .exp-item-badge {
+  padding: 2px 8px;
+  background: {{ design.badge.background|default('#5b4cdb') }};
+  color: {{ design.badge.color|default('#fff') }};
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+/* Featured Section */
+%%SELECTOR%% .exp-featured {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  {% if design.featured.padding %}
+  padding: {{ design.featured.padding }};
+  {% else %}
+  padding: 32px;
+  {% endif %}
+  background: {{ design.featured.background|default('#252525') }};
+  {% if design.featured.radius.number is defined %}
+  border-radius: {{ design.featured.radius.number }}{{ design.featured.radius.unit }};
+  {% else %}
+  border-radius: {{ design.featured.radius|default('12px') }};
+  {% endif %}
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+%%SELECTOR%% .exp-featured-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: {{ design.featured.badge_bg|default('#5b4cdb') }};
+  color: {{ design.featured.badge_color|default('#fff') }};
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+  width: fit-content;
+}
+
+%%SELECTOR%% .exp-featured-title {
+  {% if design.featured.title_size.number is defined %}
+  font-size: {{ design.featured.title_size.number }}{{ design.featured.title_size.unit }};
+  {% else %}
+  font-size: {{ design.featured.title_size|default('28px') }};
+  {% endif %}
+  font-weight: {{ design.featured.title_weight|default('700') }};
+  color: {{ design.featured.title_color|default('#fff') }};
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+%%SELECTOR%% .exp-featured-link {
+  display: inline-flex;
+  padding: 12px 24px;
+  background: {{ design.featured.link_bg|default('#fff') }};
+  color: {{ design.featured.link_color|default('#1a1a1a') }};
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+%%SELECTOR%% .exp-featured-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255,255,255,0.2);
+}
+
+/* Backdrop */
+%%SELECTOR%% .exp-menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: {{ design.backdrop.color|default('rgba(0, 0, 0, 0.3)') }};
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  {% if design.backdrop.blur %}
+  -webkit-backdrop-filter: blur({% if design.backdrop.blur.number is defined %}{{ design.backdrop.blur.number }}{{ design.backdrop.blur.unit }}{% else %}{{ design.backdrop.blur }}{% endif %});
+  backdrop-filter: blur({% if design.backdrop.blur.number is defined %}{{ design.backdrop.blur.number }}{{ design.backdrop.blur.unit }}{% else %}{{ design.backdrop.blur }}{% endif %});
+  {% else %}
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  {% endif %}
+}
+
+%%SELECTOR%% .exp-menu-backdrop.active {
+  pointer-events: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  %%SELECTOR%% .exp-menu-container {
+    max-width: calc(100vw - 40px);
+  }
+  
+  %%SELECTOR%% .exp-menu-columns {
+    grid-template-columns: 1fr;
+  }
+  
+  %%SELECTOR%% .exp-menu-content {
+    padding: 70px 24px 24px;
+  }
+}
