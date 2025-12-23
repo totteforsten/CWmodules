@@ -1,0 +1,103 @@
+.cw-video-projection {
+    position: relative;
+    width: 100%;
+}
+
+.cw-video-projection-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #000000;
+}
+
+.cw-video-projection-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: background-color 1s ease-in-out 0.5s;
+}
+
+.cw-video-projection-buttons {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 10;
+}
+
+.cw-video-projection-buttons[data-position="bottom-center"] {
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.cw-video-projection-buttons[data-position="bottom-left"] {
+    bottom: 2rem;
+    left: 2rem;
+}
+
+.cw-video-projection-buttons[data-position="bottom-right"] {
+    bottom: 2rem;
+    right: 2rem;
+}
+
+.cw-video-projection-buttons[data-position="top-center"] {
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.cw-video-projection-buttons[data-position="top-left"] {
+    top: 2rem;
+    left: 2rem;
+}
+
+.cw-video-projection-buttons[data-position="top-right"] {
+    top: 2rem;
+    right: 2rem;
+}
+
+.cw-video-projection-btn {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.cw-video-projection-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+.cw-video-projection-btn.active {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.cw-video-projection-btn.active svg {
+    color: #000000;
+}
+
+.cw-video-projection-btn svg {
+    width: 50%;
+    height: 50%;
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+.cw-video-projection-btn:hover svg {
+    color: #ffffff;
+}
+
+.cw-video-projection-btn.active:hover svg {
+    color: #000000;
+}

@@ -45,7 +45,7 @@ class FreeShippingCounter extends \Breakdance\Elements\Element
 
     static function category()
     {
-        return 'woocommerce';
+        return 'cwelements';
     }
 
     static function badge()

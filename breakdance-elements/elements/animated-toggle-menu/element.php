@@ -45,7 +45,7 @@ class AnimatedToggleMenu extends \Breakdance\Elements\Element
 
     static function category()
     {
-        return 'navigation';
+        return 'cwelements';
     }
 
     static function badge()

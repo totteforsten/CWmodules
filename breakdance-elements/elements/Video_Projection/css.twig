@@ -1,0 +1,69 @@
+%%SELECTOR%% .cw-video-projection-wrapper {
+    {% if design.container.height %}
+    height: {{ design.container.height }};
+    {% endif %}
+    {% if design.container.min_height %}
+    min-height: {{ design.container.min_height }};
+    {% endif %}
+    {% if design.container.background_type == 'gradient' and design.container.gradient_color_1 and design.container.gradient_color_2 %}
+        {% if design.container.gradient_type == 'radial' %}
+    background: radial-gradient(circle, {{ design.container.gradient_color_1 }} 0%, {{ design.container.gradient_color_2 }} 100%);
+        {% else %}
+    background: linear-gradient({{ design.container.gradient_angle ?? 135 }}deg, {{ design.container.gradient_color_1 }} 0%, {{ design.container.gradient_color_2 }} 100%);
+        {% endif %}
+    {% elseif design.container.background_color %}
+    background-color: {{ design.container.background_color }};
+    {% endif %}
+    {% if design.container.border_radius %}
+    border-radius: {{ design.container.border_radius }};
+    overflow: hidden;
+    {% endif %}
+}
+
+{% if design.buttons.show_buttons %}
+%%SELECTOR%% .cw-video-projection-buttons {
+    {% if design.buttons.button_gap %}
+    gap: {{ design.buttons.button_gap }};
+    {% endif %}
+}
+
+%%SELECTOR%% .cw-video-projection-btn {
+    {% if design.buttons.button_size %}
+    width: {{ design.buttons.button_size }};
+    height: {{ design.buttons.button_size }};
+    {% endif %}
+    {% if design.buttons.button_background %}
+    background: {{ design.buttons.button_background }};
+    {% endif %}
+}
+
+%%SELECTOR%% .cw-video-projection-btn:hover {
+    {% if design.buttons.button_background.hover %}
+    background: {{ design.buttons.button_background.hover }};
+    {% endif %}
+}
+
+%%SELECTOR%% .cw-video-projection-btn svg {
+    {% if design.buttons.button_icon_color %}
+    color: {{ design.buttons.button_icon_color }};
+    {% endif %}
+}
+
+%%SELECTOR%% .cw-video-projection-btn:hover svg {
+    {% if design.buttons.button_icon_color.hover %}
+    color: {{ design.buttons.button_icon_color.hover }};
+    {% endif %}
+}
+{% endif %}
+
+{% if design.spacing.margin_top %}
+%%SELECTOR%% {
+    margin-top: {{ design.spacing.margin_top }};
+}
+{% endif %}
+
+{% if design.spacing.margin_bottom %}
+%%SELECTOR%% {
+    margin-bottom: {{ design.spacing.margin_bottom }};
+}
+{% endif %}

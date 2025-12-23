@@ -1,0 +1,101 @@
+%%SELECTOR%% .cw-image-reveal-wrapper {
+    {% if design.layout.width.number is defined %}
+    width: {{ design.layout.width.number }}{{ design.layout.width.unit }};
+    {% elseif design.layout.width %}
+    width: {{ design.layout.width }};
+    {% endif %}
+    {% if design.layout.max_width.number is defined %}
+    max-width: {{ design.layout.max_width.number }}{{ design.layout.max_width.unit }};
+    {% elseif design.layout.max_width %}
+    max-width: {{ design.layout.max_width }};
+    {% endif %}
+    {% if design.layout.aspect_ratio and design.layout.aspect_ratio != 'custom' %}
+    aspect-ratio: {{ design.layout.aspect_ratio }};
+    {% elseif design.layout.height.number is defined %}
+    height: {{ design.layout.height.number }}{{ design.layout.height.unit }};
+    {% elseif design.layout.height %}
+    height: {{ design.layout.height }};
+    {% endif %}
+    {% if design.appearance.border_radius.number is defined %}
+    border-radius: {{ design.appearance.border_radius.number }}{{ design.appearance.border_radius.unit }};
+    {% elseif design.appearance.border_radius %}
+    border-radius: {{ design.appearance.border_radius }};
+    {% endif %}
+    {% if design.appearance.background_color %}
+    background-color: {{ design.appearance.background_color }};
+    {% endif %}
+    {% if design.appearance.box_shadow %}
+    box-shadow: {{ design.appearance.box_shadow }};
+    {% endif %}
+}
+
+{# Navigation Dots #}
+{% if design.navigation.show_dots %}
+%%SELECTOR%% .cw-image-reveal-dots {
+    {% if design.navigation.dots_gap.number is defined %}
+    gap: {{ design.navigation.dots_gap.number }}{{ design.navigation.dots_gap.unit }};
+    {% elseif design.navigation.dots_gap %}
+    gap: {{ design.navigation.dots_gap }};
+    {% endif %}
+}
+
+%%SELECTOR%% .cw-image-reveal-dot {
+    {% if design.navigation.dots_size.number is defined %}
+    width: {{ design.navigation.dots_size.number }}{{ design.navigation.dots_size.unit }};
+    height: {{ design.navigation.dots_size.number }}{{ design.navigation.dots_size.unit }};
+    {% elseif design.navigation.dots_size %}
+    width: {{ design.navigation.dots_size }};
+    height: {{ design.navigation.dots_size }};
+    {% endif %}
+    {% if design.navigation.dots_color %}
+    background-color: {{ design.navigation.dots_color }};
+    {% endif %}
+}
+
+%%SELECTOR%% .cw-image-reveal-dot.active,
+%%SELECTOR%% .cw-image-reveal-dot:hover {
+    {% if design.navigation.dots_active_color %}
+    background-color: {{ design.navigation.dots_active_color }};
+    {% endif %}
+}
+{% endif %}
+
+{# Navigation Arrows #}
+{% if design.navigation.show_arrows %}
+%%SELECTOR%% .cw-image-reveal-arrow {
+    {% if design.navigation.arrows_size.number is defined %}
+    width: {{ design.navigation.arrows_size.number }}{{ design.navigation.arrows_size.unit }};
+    height: {{ design.navigation.arrows_size.number }}{{ design.navigation.arrows_size.unit }};
+    {% elseif design.navigation.arrows_size %}
+    width: {{ design.navigation.arrows_size }};
+    height: {{ design.navigation.arrows_size }};
+    {% endif %}
+    {% if design.navigation.arrows_background %}
+    background: {{ design.navigation.arrows_background }};
+    {% endif %}
+    {% if design.navigation.arrows_color %}
+    color: {{ design.navigation.arrows_color }};
+    {% endif %}
+}
+{% endif %}
+
+{# Spacing #}
+{% if design.spacing.margin_top.number is defined %}
+%%SELECTOR%% {
+    margin-top: {{ design.spacing.margin_top.number }}{{ design.spacing.margin_top.unit }};
+}
+{% elseif design.spacing.margin_top %}
+%%SELECTOR%% {
+    margin-top: {{ design.spacing.margin_top }};
+}
+{% endif %}
+
+{% if design.spacing.margin_bottom.number is defined %}
+%%SELECTOR%% {
+    margin-bottom: {{ design.spacing.margin_bottom.number }}{{ design.spacing.margin_bottom.unit }};
+}
+{% elseif design.spacing.margin_bottom %}
+%%SELECTOR%% {
+    margin-bottom: {{ design.spacing.margin_bottom }};
+}
+{% endif %}

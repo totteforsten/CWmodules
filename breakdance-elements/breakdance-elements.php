@@ -309,6 +309,11 @@ class Colorwave_Module_Breakdance_Elements extends Colorwave_Module {
             return;
         }
 
+        // Register custom CWelements category using Breakdance API
+        if (function_exists('Breakdance\Elements\registerCategory')) {
+            \Breakdance\Elements\registerCategory('cwelements', 'CWelements');
+        }
+
         $relative_path = \Breakdance\Util\getDirectoryPathRelativeToPluginFolder(__DIR__);
 
         \Breakdance\ElementStudio\registerSaveLocation(

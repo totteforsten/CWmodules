@@ -45,7 +45,7 @@ class TermLoopBuilder extends \Breakdance\Elements\Element
 
     static function category()
     {
-        return 'dynamic';
+        return 'cwelements';
     }
 
     static function badge()
